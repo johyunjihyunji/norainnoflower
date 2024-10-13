@@ -3,6 +3,7 @@ let speed = 5;
 let direction = 0; // -1 for left, 0 for still, 1 for right
 let curPos;
 
+// Star Background
 let stars = [];
 const numStars = 100;
 let starImages;
@@ -12,6 +13,8 @@ function preload() {
     runningGif = loadImage("./static/runFrame.gif");
     yellowStarImage = loadImage('./static/yellow_star.png');
     pinkStarImage = loadImage('./static/pink_star.png');
+
+    rainGif = loadImage("./static/rainFrame.gif");
 }
 
 function setup() {
@@ -26,6 +29,7 @@ function setup() {
         stars.push(new Star());
     }
     starImages = [pinkStarImage, yellowStarImage];
+    rain = new Rain(); 
 }
 
 function centerCanvas() {
@@ -35,7 +39,7 @@ function centerCanvas() {
 }
 
 function draw() {
-    background('#010101');
+    background('#030b07');
     
     // Check for key presses
     if (keyIsDown(RIGHT_ARROW)) {
@@ -47,7 +51,10 @@ function draw() {
     }
 
     // Move and display stars
-    updateAndDisplayStars(stars, direction !== 0, -direction, starImages);
+    updateAndRenderStars(stars, direction !== 0, -direction, starImages);
+
+    // Update and display rain
+    updateAndRenderRain(rain, direction !== 0, direction, rainGif)
     
     // Calculate y position to place the bottom of the image at the bottom of the canvas
     let yPos = height - (stillFrame.height * 0.4/ 2);
@@ -56,12 +63,12 @@ function draw() {
     push();
     if (direction !== 0) {
         // Running
-        translate(curPos, yPos - 30);
+        translate(curPos, yPos);
         scale(direction, 1); // Flip horizontally if moving left
-        image(runningGif, 0, 0, runningGif.width * 0.37, runningGif.height * 0.37);
+        image(runningGif, 0, 0, runningGif.width * 0.3, runningGif.height * 0.3);
     } else {
         // Standing still
-        image(stillFrame, curPos, yPos - 30, stillFrame.width * 0.37, stillFrame.height * 0.37);
+        image(stillFrame, curPos, yPos, stillFrame.width * 0.3, stillFrame.height * 0.3);
     }
     pop();
 }

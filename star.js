@@ -2,7 +2,7 @@ class Star {
     constructor() {
         this.x = random(10, width);
         this.y = random(10, height);
-        this.size = random(15, 40);
+        this.size = random(30, 50);
         this.speed = random(1, 3);
     }
   
@@ -33,7 +33,7 @@ class Star {
     }
 }
   
-function updateAndDisplayStars(stars, moving, direction, starImages) {
+function updateAndRenderStars(stars, moving, direction, starImages) {
     for (let sparklestar of stars) {
         if (moving) {
             sparklestar.move(direction);
