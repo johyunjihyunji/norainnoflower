@@ -14,7 +14,7 @@ function preload() {
     yellowStarImage = loadImage('./static/yellow_star.png');
     pinkStarImage = loadImage('./static/pink_star.png');
 
-    rainGif = loadImage("./static/runFrame.gif");
+    rainGif = loadImage("./static/rainFrame.gif");
 }
 
 function setup() {
