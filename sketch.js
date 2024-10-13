@@ -1,4 +1,4 @@
-let stillFrame, runningGif;
+let stillFrame, runningGif, rainGif;
 let speed = 5;
 let direction = 0; // -1 for left, 0 for still, 1 for right
 let curPos;
@@ -14,7 +14,7 @@ function preload() {
     yellowStarImage = loadImage('./static/yellow_star.png');
     pinkStarImage = loadImage('./static/pink_star.png');
 
-    rainGif = loadImage("./static/rainFrame.gif");
+    rainGif = loadImage("./static/runFrame.gif");
 }
 
 function setup() {
