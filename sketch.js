@@ -26,7 +26,11 @@ let score = 10;
 // Flowers
 let flowers = [];
 
+// Gamestate
+let Gamestate = false;
+
 function preload() {
+    //Images and Gif
     stillFrame = loadImage('./static/stillFrame.png');
     runningGif = loadImage("./static/runFrame.gif");
     yellowStarImage = loadImage('./static/yellow_star.png');
@@ -36,6 +40,10 @@ function preload() {
     grainImage = loadImage('./static/grainAttempt2.jpeg');
     umbrellaGif = loadImage('./static/umbrella.gif');
     flowerGif = loadImage('./static/flower.gif');
+    landingpage = loadImage('./static/landingpage.png')
+
+    //Sound
+    mainTrack = loadSound('./sound/Main_Track.m4a');
 }
 
 function setup() {
@@ -65,6 +73,53 @@ function setup() {
 }
 
 function draw() {
+    if (Gamestate) {
+        drawgame()
+    } else {
+        landingPage()
+    }
+}
+
+function landingPage() {
+    startButton = createButton('Start Game');
+
+    // Background - Perplexity.AI helped with creating gradient background
+    let c1 = color('#432749'); // purple
+    let c2 = color('#E17E84'); // pink
+    let c3 = color('#EEE790'); // yellow
+    
+    for (let y = 0; y < height; y++) {
+        let inter1 = map(y, 0, height/2, 0, 1);
+        let inter2 = map(y, height/2, height, 0, 1);
+        let c;
+        
+        if (y < height/2) {
+          c = lerpColor(c1, c2, inter1);
+        } else {
+          c = lerpColor(c2, c3, inter2);
+        }
+        
+        stroke(c);
+        line(0, y, width, y);
+    }
+
+    image(landingpage, width / 2, height / 2, landingpage.width * 0.6, landingpage.height * 0.6)
+    startButton.position(width/2 - 50, height/2 + 100);
+    startButton.mousePressed(startGame);
+}
+
+function startGame() {
+
+    // Atempting to fix my audio issue helped by perplexity.ai
+    userStartAudio();
+
+    mainTrack.loop();
+    startButton.remove();
+}
+
+
+
+function gamedraw() {
     // background  
 
     // Perplexity.AI helped with creating gradient background
@@ -86,6 +141,7 @@ function draw() {
         stroke(c);
         line(0, y, width, y);
     }
+    
 
     // Draw grass
     drawGrass(direction, grassPokes);
@@ -149,7 +205,7 @@ function draw() {
     pop();
 
     // Check if gameover
-    checkDeath()
+    checkDeath()  
 }
 
 function displayScore() {
