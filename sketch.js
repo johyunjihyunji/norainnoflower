@@ -44,6 +44,7 @@ function preload() {
 
     //Sound
     mainTrack = loadSound('./sound/Main_Track.m4a');
+    rainSound = loadSound('./sound/rainSound.mp3');
 }
 
 function setup() {
@@ -59,7 +60,7 @@ function setup() {
     }
 
     // Create rain cloud
-    rain = new Rain(rainGif); 
+    rain = new Rain(rainGif, rainSound); 
 
     // Create clouds for background
     for (let i = 0; i < numClouds; i++) {
@@ -136,6 +137,7 @@ function startGame() {
 
 
 function drawgame() {
+
     // background  
 
     // Perplexity.AI helped with creating gradient background
@@ -218,14 +220,18 @@ function drawgame() {
         // Standing still
         image(stillFrame, charX, charY, stillFrame.width * 0.3, stillFrame.height * 0.3);
     }
-    pop();
+    pop(); 
 
     // Check if gameover
-    checkDeath()  
+    checkDeath() 
+    displayScore() 
 }
 
 function displayScore() {
     push();
+    fill('#6B8778')
+    noStroke();
+    rect(5, 5, 50, 30); 
     fill(255);
     textSize(24);
     textAlign(LEFT, TOP);
@@ -234,13 +240,15 @@ function displayScore() {
 }
 
 function checkDeath() {
-    if (score < 0) {
+    if (score <= 0) {
         noLoop(); // Stop the game
         push();
         fill(255);
         textSize(48);
         textAlign(CENTER, CENTER);
         text("Game Over", width/2, height/2);
+        mainTrack.stop()
+        // rain.rainSound.stop()
         pop();
     }
 }

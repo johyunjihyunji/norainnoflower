@@ -1,11 +1,12 @@
 class Rain {
-    constructor(rainGif) {
+    constructor(rainGif, rainSound) {
         this.isRaining = false;
         this.timeBetweenRain = random(200, 500);
         this.rainSpeed = 5; 
         this.x = windowWidth + 300;
         this.y = 300;
         this.rainGif = rainGif;
+        this.rainSound = rainSound;
     }
 
     move(moving, direction) {
@@ -36,11 +37,15 @@ class Rain {
     }
 
     render() {
-        if (this.isRaining && rain.rainGif) {
+        if (this.isRaining && this.rainGif && this.rainSound) {
             push();
+            // userStartAudio();
+            // this.rainSound.play()
             imageMode(CENTER);
             image(rain.rainGif, this.x, this.y, rain.rainGif.width * 0.3, rain.rainGif.height * 0.3);
             pop();
+        } else {
+            // this.rainSound.stop()
         }
     }
 }
@@ -62,10 +67,10 @@ function updateScoreRain(rain, charX, charWidth, showUmbrella, score, currentTim
 
     if (collided && rain.isRaining && !showUmbrella && currentTime - lastScoreDecrease >= scoreDecreaseInterval) {
         lastScoreDecrease = currentTime;
-        return Math.max(0, score - 1); 
+        return score - 1;
     }
     else {
-        return score
+        return score;
     }
 }
 
