@@ -1,4 +1,4 @@
-let stillFrame, runningGif, rainGif, grainImage, umbrellaImage;;
+let stillFrame, runningGif, rainGif, grainImage, umbrellaImage, flowerImg;
 let speed = 5;
 let direction = 0; // -1 for left, 0 for still, 1 for right
 let charX;
@@ -23,6 +23,9 @@ let showUmbrella = false;
 // Score System
 let score = 10;
 
+// Flowers
+let flowers = [];
+
 function preload() {
     stillFrame = loadImage('./static/stillFrame.png');
     runningGif = loadImage("./static/runFrame.gif");
@@ -32,6 +35,7 @@ function preload() {
     cloudGif = loadImage("./static/cloud.gif");
     grainImage = loadImage('./static/grainAttempt2.jpeg');
     umbrellaGif = loadImage('./static/umbrella.gif');
+    flowerGif = loadImage('./static/flower.gif');
 }
 
 function setup() {
@@ -120,9 +124,13 @@ function draw() {
     // Update and display clouds
     updateAndRenderClouds(clouds, direction !== 0, direction)
 
+    // Update and display flowers
+    updateAndRenderFlowers(rain, flowers, flowerGif, direction);
+
     // Update and display Score
     displayScore()
     score = updateScoreRain(rain, charX, stillFrame.width * 0.5, showUmbrella, score,  millis())
+    score = updateScoreFlower(charX, stillFrame.width * 0.2);
  
     // Display character
     push();

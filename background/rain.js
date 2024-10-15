@@ -57,12 +57,12 @@ function updateScoreRain(rain, charX, charWidth, showUmbrella, score, currentTim
     let collided = collidesWith(rain, charX, charWidth)
 
     if (showUmbrella) {
-        return score; // No score decrease if umbrella is shown
+        return score; 
     }
 
     if (collided && rain.isRaining && !showUmbrella && currentTime - lastScoreDecrease >= scoreDecreaseInterval) {
         lastScoreDecrease = currentTime;
-        return Math.max(0, score - 1); // Ensure score doesn't go below 0
+        return Math.max(0, score - 1); 
     }
     else {
         return score
