@@ -74,8 +74,13 @@ function setup() {
 
     // Start button
     startButton = createButton('Start Game');
-    startButton.position(width/2 - 50, height/2 + 100);
+    startButton.position(width/2 - 70, height/2 + 200);
     startButton.mousePressed(startGame);
+    startButton.size(150, 50);
+    startButton.style('background-color', '#6B8778');
+    startButton.style('font-size', '16px');
+    startButton.style('color', 'white');
+    startButton.style('border', 'none');
 }
 
 function draw() {
@@ -120,8 +125,16 @@ function drawlanding() {
 
     // Title
     push();
-    image(landingpage, width / 2, height / 2, landingpage.width * 0.6, landingpage.height * 0.6);
+    image(landingpage, width / 2, height / 2 - 50, landingpage.width * 0.6, landingpage.height * 0.6);
     pop();
+
+    // Instructions
+    push();
+    fill(255);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text("collect your flowers and use the umbrella (up arrow key) when it rains", width/2, height/2 + 170);
+    pop()
 }
 
 function startGame() {
