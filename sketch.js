@@ -47,7 +47,7 @@ function setup() {
     }
 
     // Create rain cloud
-    rain = new Rain(); 
+    rain = new Rain(rainGif); 
 
     // Create clouds for background
     for (let i = 0; i < numClouds; i++) {
@@ -122,7 +122,7 @@ function draw() {
 
     // Update and display Score
     displayScore()
-    score = updateScoreRain(rain, direction !== 0, charX, runningGif.width, showUmbrella, score,  millis())
+    score = updateScoreRain(rain, charX, stillFrame.width * 0.5, showUmbrella, score,  millis())
  
     // Display character
     push();

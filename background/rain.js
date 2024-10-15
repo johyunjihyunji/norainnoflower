@@ -1,11 +1,11 @@
 class Rain {
-    constructor() {
+    constructor(rainGif) {
         this.isRaining = false;
         this.timeBetweenRain = random(200, 500);
         this.rainSpeed = 5; 
         this.x = windowWidth + 300;
         this.y = 300;
-        this.rainGif;
+        this.rainGif = rainGif;
     }
 
     move(moving, direction) {
@@ -35,48 +35,44 @@ class Rain {
         }
     }
 
-    render(rainGif) {
-        rain.rainGif = rainGif
-        if (this.isRaining && rainGif) {
+    render() {
+        if (this.isRaining && rain.rainGif) {
             push();
             imageMode(CENTER);
-            image(rainGif, this.x, this.y, rainGif.width * 0.3, rainGif.height * 0.3);
+            image(rain.rainGif, this.x, this.y, rain.rainGif.width * 0.3, rain.rainGif.height * 0.3);
             pop();
         }
     }
 }
 
-function updateAndRenderRain(rain, moving, direction, rainGif) {
+function updateAndRenderRain(rain, moving, direction) {
     rain.move(moving, direction);
-    rain.render(rainGif);
+    rain.render();
 }
 
 let lastScoreDecrease = 0
 scoreDecreaseInterval = 1000
 
-function updateScoreRain(rain, moving, charX, charWidth, showUmbrella, score, currentTime) {
-    // If it is raining in frame
-    if (rain.isRaining && !showUmbrella && currentTime - lastScoreDecrease >= scoreDecreaseInterval) {
-        // Entering Rain
-        if (charX + charWidth / 2 > rain.x && charX < rain.x + rain.rainGif.width * 0.3){
-            lastScoreDecrease = currentTime
-            return score - 1
-        } 
-        // Inside Rain
-        else if (rain.x < charX && rain.x + rain.rainGif.width * 0.3 > charX + charWidth / 2){
-            lastScoreDecrease = currentTime
-            return score - 1
-        }
-        // Exiting Rain
-        else if (rain.x + rain.rainGif.width * 0.3 > charX && charX > rain.x) {
-            lastScoreDecrease = currentTime
-            return score - 1
-        }
-        else {
-            return score
-        }
+function updateScoreRain(rain, charX, charWidth, showUmbrella, score, currentTime) {
+    let collided = collidesWith(rain, charX, charWidth)
+
+    if (showUmbrella) {
+        return score; // No score decrease if umbrella is shown
+    }
+
+    if (collided && rain.isRaining && !showUmbrella && currentTime - lastScoreDecrease >= scoreDecreaseInterval) {
+        lastScoreDecrease = currentTime;
+        return Math.max(0, score - 1); // Ensure score doesn't go below 0
     }
     else {
         return score
     }
+}
+
+
+function collidesWith(rain, charX, charWidth) {
+    return (
+        rain.x < charX + charWidth &&
+        rain.x + rain.rainGif.width - 50 > charX
+    );
 }
