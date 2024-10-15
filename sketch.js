@@ -1,46 +1,101 @@
-let stillFrame, runningGif, rainGif;
+let stillFrame, runningGif, rainGif, grainImage, umbrellaImage;;
 let speed = 5;
 let direction = 0; // -1 for left, 0 for still, 1 for right
-let curPos;
+let charX;
+let charY;
 
 // Star Background
 let stars = [];
-const numStars = 100;
+const numStars = 40;
 let starImages;
+
+// Cloud Background
+let clouds = [];
+const numClouds = 6;
+
+// Grass Background
+let grassPokes = []
+let numGrassPokes = 100; 
+
+// Umbrella
+let showUmbrella = false;
+
+// Score System
+let score = 10;
 
 function preload() {
     stillFrame = loadImage('./static/stillFrame.png');
     runningGif = loadImage("./static/runFrame.gif");
     yellowStarImage = loadImage('./static/yellow_star.png');
     pinkStarImage = loadImage('./static/pink_star.png');
-
-    rainGif = loadImage("./static/rainFrame.gif");
+    rainGif = loadImage("./static/rain.gif");
+    cloudGif = loadImage("./static/cloud.gif");
+    grainImage = loadImage('./static/grainAttempt2.jpeg');
+    umbrellaGif = loadImage('./static/umbrella.gif');
 }
 
 function setup() {
-    //canvas = createCanvas(900, 600);
     canvas = createCanvas(windowWidth, windowHeight);
-    centerCanvas();
     imageMode(CENTER);
-    curPos = width / 2;
+    charX = width / 2;
+    charY = height - 250;
     
     // Create stars for background
+    starImages = [pinkStarImage, yellowStarImage];
     for (let i = 0; i < numStars; i++) {
         stars.push(new Star());
     }
-    starImages = [pinkStarImage, yellowStarImage];
-    rain = new Rain(); 
-}
 
-function centerCanvas() {
-    let x = (windowWidth - width) / 2;
-    let y = (windowHeight - height) / 2;
-    canvas.position(x, y);
+    // Create rain cloud
+    rain = new Rain(); 
+
+    // Create clouds for background
+    for (let i = 0; i < numClouds; i++) {
+        createCloud(clouds, cloudGif);
+    }
+
+    // Create grass pokes
+    for (let i = 0; i < numGrassPokes; i++) {
+        grassPokes.push(new GrassPoke(i));
+    }
 }
 
 function draw() {
-    background('#030b07');
+    // background  
+
+    // Perplexity.AI helped with creating gradient background
+    let c1 = color('#432749'); // purple
+    let c2 = color('#E17E84'); // pink
+    let c3 = color('#EEE790'); // yellow
     
+    for (let y = 0; y < height; y++) {
+        let inter1 = map(y, 0, height/2, 0, 1);
+        let inter2 = map(y, height/2, height, 0, 1);
+        let c;
+        
+        if (y < height/2) {
+          c = lerpColor(c1, c2, inter1);
+        } else {
+          c = lerpColor(c2, c3, inter2);
+        }
+        
+        stroke(c);
+        line(0, y, width, y);
+    }
+
+    // Draw grass
+    drawGrass(direction, grassPokes);
+    
+    // Apply grain
+    push();
+    blendMode(OVERLAY);
+    tint(255, 80);
+    image(grainImage, 0, 0, width , height);
+    image(grainImage, width,  height, width , height);
+    image(grainImage, 0,  height, width , height);
+    image(grainImage, width,  0, width , height);
+    pop();
+
     // Check for key presses
     if (keyIsDown(RIGHT_ARROW)) {
         direction = 1;
@@ -50,25 +105,64 @@ function draw() {
         direction = 0;
     }
 
-    // Move and display stars
+    if (keyIsDown(UP_ARROW)) {
+        showUmbrella = true;
+    } else {
+        showUmbrella = false;
+    }
+
+    // Update and display stars
     updateAndRenderStars(stars, direction !== 0, -direction, starImages);
 
     // Update and display rain
     updateAndRenderRain(rain, direction !== 0, direction, rainGif)
-    
-    // Calculate y position to place the bottom of the image at the bottom of the canvas
-    let yPos = height - (stillFrame.height * 0.4/ 2);
-    
+
+    // Update and display clouds
+    updateAndRenderClouds(clouds, direction !== 0, direction)
+
+    // Update and display Score
+    displayScore()
+    score = updateScoreRain(rain, direction !== 0, charX, runningGif.width, showUmbrella, score,  millis())
+ 
     // Display character
     push();
     if (direction !== 0) {
         // Running
-        translate(curPos, yPos);
+        translate(charX, charY);
         scale(direction, 1); // Flip horizontally if moving left
         image(runningGif, 0, 0, runningGif.width * 0.3, runningGif.height * 0.3);
+        if (showUmbrella) {
+            image(umbrellaGif, 15, -250, umbrellaGif.width * 0.25, umbrellaGif.height * 0.25);
+        }
     } else {
         // Standing still
-        image(stillFrame, curPos, yPos, stillFrame.width * 0.3, stillFrame.height * 0.3);
+        image(stillFrame, charX, charY, stillFrame.width * 0.3, stillFrame.height * 0.3);
     }
     pop();
+
+    // Check if gameover
+    checkDeath()
 }
+
+function displayScore() {
+    push();
+    fill(255);
+    textSize(24);
+    textAlign(LEFT, TOP);
+    text(score, 10, 10);
+    pop();
+}
+
+function checkDeath() {
+    if (score < 0) {
+        noLoop(); // Stop the game
+        push();
+        fill(255);
+        textSize(48);
+        textAlign(CENTER, CENTER);
+        text("Game Over", width/2, height/2);
+        pop();
+    }
+}
+
+
