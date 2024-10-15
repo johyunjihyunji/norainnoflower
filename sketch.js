@@ -27,7 +27,7 @@ let score = 10;
 let flowers = [];
 
 // Gamestate
-let Gamestate = false;
+let gameState = false;
 
 function preload() {
     //Images and Gif
@@ -70,18 +70,22 @@ function setup() {
     for (let i = 0; i < numGrassPokes; i++) {
         grassPokes.push(new GrassPoke(i));
     }
+
+    // Start button
+    startButton = createButton('Start Game');
+    startButton.position(width/2 - 50, height/2 + 100);
+    startButton.mousePressed(startGame);
 }
 
 function draw() {
-    if (Gamestate) {
+    if (gameState) {
         drawgame()
     } else {
-        landingPage()
+        drawlanding ()
     }
 }
 
-function landingPage() {
-    startButton = createButton('Start Game');
+function drawlanding() {
 
     // Background - Perplexity.AI helped with creating gradient background
     let c1 = color('#432749'); // purple
@@ -103,9 +107,20 @@ function landingPage() {
         line(0, y, width, y);
     }
 
-    image(landingpage, width / 2, height / 2, landingpage.width * 0.6, landingpage.height * 0.6)
-    startButton.position(width/2 - 50, height/2 + 100);
-    startButton.mousePressed(startGame);
+    // Apply grain
+    push();
+    blendMode(OVERLAY);
+    tint(255, 80);
+    image(grainImage, 0, 0, width , height);
+    image(grainImage, width,  height, width , height);
+    image(grainImage, 0,  height, width , height);
+    image(grainImage, width,  0, width , height);
+    pop();
+
+    // Title
+    push();
+    image(landingpage, width / 2, height / 2, landingpage.width * 0.6, landingpage.height * 0.6);
+    pop();
 }
 
 function startGame() {
@@ -115,11 +130,12 @@ function startGame() {
 
     mainTrack.loop();
     startButton.remove();
+    gameState = true;
 }
 
 
 
-function gamedraw() {
+function drawgame() {
     // background  
 
     // Perplexity.AI helped with creating gradient background

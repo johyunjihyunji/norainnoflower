@@ -65,7 +65,7 @@ function updateScoreFlower(charX, charWidth) {
         if (flowers[i].collidesWith(charX, charWidth)) {
             flowers.splice(i, 1);
             flowers.collected = true
-            return score += 2; 
+            return score += 1; 
         }
         else {
             return score
