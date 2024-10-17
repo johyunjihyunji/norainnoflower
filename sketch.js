@@ -25,6 +25,7 @@ let score = 10;
 
 // Flowers
 let flowers = [];
+let flowerSounds = [];
 
 // Gamestate
 let gameState = false;
@@ -45,6 +46,10 @@ function preload() {
     //Sound
     mainTrack = loadSound('./sound/Main_Track.m4a');
     rainSound = loadSound('./sound/rainSound.mp3');
+    flowerSound1 = loadSound('./sound/Eating_Flower/Eating_Flower_1.wav');
+    flowerSound2 = loadSound('./sound/Eating_Flower/Eating_Flower_2.wav');
+    flowerSound3 = loadSound('./sound/Eating_Flower/Eating_Flower_3.wav');
+    flowerSound4 = loadSound('./sound/Eating_Flower/Eating_Flower_4.wav');
 }
 
 function setup() {
@@ -72,8 +77,11 @@ function setup() {
         grassPokes.push(new GrassPoke(i));
     }
 
+    // Create flower sound array
+    flowerSounds = [flowerSound1, flowerSound2, flowerSound3, flowerSound4];
+
     // Start button
-    startButton = createButton('Start Game');
+    startButton = createButton('Start');
     startButton.position(width/2 - 70, height/2 + 200);
     startButton.mousePressed(startGame);
     startButton.size(150, 50);
@@ -81,6 +89,7 @@ function setup() {
     startButton.style('font-size', '16px');
     startButton.style('color', 'white');
     startButton.style('border', 'none');
+    startButton.style('border-radius', '30px');
 }
 
 function draw() {
@@ -212,7 +221,7 @@ function drawgame() {
     updateAndRenderClouds(clouds, direction !== 0, direction)
 
     // Update and display flowers
-    updateAndRenderFlowers(rain, flowers, flowerGif, direction);
+    updateAndRenderFlowers(rain, flowers, flowerGif, direction, flowerSounds);
 
     // Update and display Score
     displayScore()
@@ -261,7 +270,7 @@ function checkDeath() {
         textAlign(CENTER, CENTER);
         text("Game Over", width/2, height/2);
         mainTrack.stop()
-        // rain.rainSound.stop()
+        rain.rainSound.stop()
         pop();
     }
 }

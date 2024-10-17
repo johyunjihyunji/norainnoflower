@@ -1,10 +1,11 @@
 class Flower {
-    constructor(flowerGif) {
+    constructor(flowerGif, flowerSounds) {
         this.x = width + 50;
         this.y = windowHeight/2
         this.flowerGif = flowerGif;
         this.collected = false;
         this.speed = 3;
+        this.flowerSounds = flowerSounds;
     }
 
     collidesWith(charX, charWidth) {
@@ -36,13 +37,14 @@ class Flower {
 
 let timeSinceLastFlower = 0;
 let flowerInterval = 450;
+let soundIndex = 0
 
-function updateAndRenderFlowers(rain, flowers, flowerGif, direction) {
+function updateAndRenderFlowers(rain, flowers, flowerGif, direction, flowerSounds) {
     if (!rain.isRaining) {
         timeSinceLastFlower++
 
         if (flowers.length === 0 && timeSinceLastFlower >= flowerInterval) {
-            flowers.push(new Flower(flowerGif));
+            flowers.push(new Flower(flowerGif, flowerSounds));
             timeSinceLastFlower = 0
             flowerInterval = random(100, 240)
         }
@@ -65,6 +67,11 @@ function updateScoreFlower(charX, charWidth) {
         if (flowers[i].collidesWith(charX, charWidth)) {
             flowers.splice(i, 1);
             flowers.collected = true
+            flowerSounds[soundIndex].play()
+            soundIndex += 1
+            if (soundIndex > 3) {
+                soundIndex = 0
+            }
             return score += 1; 
         }
         else {

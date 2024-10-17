@@ -32,9 +32,6 @@ class Cloud {
         imageMode(CENTER);
         image(this.cloudGif, this.x, this.y, this.cloudGif.width * this.scalefactor, this.cloudGif.height * this.scalefactor);
         pop();
-        // if (cloudGif) {
-
-        // }
     }
 }
 

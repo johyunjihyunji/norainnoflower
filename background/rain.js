@@ -7,6 +7,7 @@ class Rain {
         this.y = 300;
         this.rainGif = rainGif;
         this.rainSound = rainSound;
+        this.isSoundPlaying = false;
     }
 
     move(moving, direction) {
@@ -38,14 +39,18 @@ class Rain {
 
     render() {
         if (this.isRaining && this.rainGif && this.rainSound) {
-            push();
-            // userStartAudio();
-            // this.rainSound.play()
+            if (!this.isSoundPlaying) {
+                push();
+                userStartAudio();
+                this.rainSound.play()
+                this.isSoundPlaying = true
+            }
             imageMode(CENTER);
             image(rain.rainGif, this.x, this.y, rain.rainGif.width * 0.3, rain.rainGif.height * 0.3);
             pop();
         } else {
-            // this.rainSound.stop()
+            this.rainSound.stop()
+            this.isSoundPlaying = false
         }
     }
 }
