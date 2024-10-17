@@ -8,18 +8,22 @@ class Rain {
         this.rainGif = rainGif;
         this.rainSound = rainSound;
         this.isSoundPlaying = false;
+        this.soundVolume = 0;
+        this.fadeSpeed = 0.01;
     }
 
     move(moving, direction) {
         if (moving) {
             if (!this.isRaining) {
                 if (this.timeBetweenRain <= 0) {
+                    this.soundVolume = max(this.soundVolume - this.fadeSpeed, 0);
                     this.isRaining = true;
                     this.x = windowWidth + 300; // Always start from the right
                 } else {
                     this.timeBetweenRain--;
                 }
             } else {
+                this.soundVolume = min(this.soundVolume + this.fadeSpeed, 1);
                 this.x -= this.rainSpeed * direction;
 
                 if (this.x < -300 || this.x > windowWidth + 300) {
@@ -42,6 +46,7 @@ class Rain {
             if (!this.isSoundPlaying) {
                 push();
                 userStartAudio();
+                this.rainSound.setVolume(this.soundVolume);
                 this.rainSound.play()
                 this.isSoundPlaying = true
             }

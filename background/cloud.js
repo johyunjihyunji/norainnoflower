@@ -23,8 +23,16 @@ class Cloud {
             this.x -= this.cloudSpeed;
         }
     
-        if (this.x > width) this.x = 0;
-        if (this.x < 0) this.x = width;
+        if (this.x > width)  {
+            this.x = 0;
+            this.y = random(10, windowHeight/2);
+            this.scalefactor = random(0.07, 0.17);
+        }
+        if (this.x < 0) {
+            this.x = width;
+            this.y = random(10, windowHeight/2);
+            this.scalefactor = random(0.07, 0.17);
+        }
     }
 
     render() {
